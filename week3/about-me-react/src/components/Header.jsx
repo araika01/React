@@ -14,11 +14,16 @@ return (
 
   <div className="hero">
     <div className="hero-text">
-      <p className="hello">Hello!</p>
 
       <h1>I'm Aray</h1>
 
       <h2>Information Systems Student</h2>
+
+      <h3>I'm 20 years old.</h3>
+
+      <h3>4 course</h3>
+
+      <h3>Location: Almaty📍</h3>
 
       <p>
         I am interested in technology, web development and creative UI-UX design.

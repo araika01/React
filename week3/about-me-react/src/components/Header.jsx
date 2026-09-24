@@ -31,7 +31,7 @@ return (
 
     <div className="hero-image">
       <img
-        src="./public/5305250089603375298.jpg"
+        src="./React/5305250089603375298.jpg"
         alt="Profile"
       />
     </div>

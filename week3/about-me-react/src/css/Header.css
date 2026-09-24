@@ -14,6 +14,11 @@ font-size: 24px;
 margin: 0;
 }
 
+.logo:hover {
+    transform: scale(1.07);
+    box-shadow: 0 10px 28px rgba(124, 92, 255, 0.4);
+}
+
 .nav-links {
 display: flex;
 gap: 30px;
@@ -27,6 +32,8 @@ font-weight: 500;
 
 .nav-links a:hover {
 color: #7c5cff;
+transform: scale(1.07);
+box-shadow: 0 10px 28px rgba(124, 92, 255, 0.4);
 }
 
 .hero {
@@ -41,11 +48,6 @@ gap: 50px;
 max-width: 550px;
 }
 
-.hello {
-color: #7c5cff;
-font-weight: 600;
-font-size: 18px;
-}
 
 .hero h1 {
 font-size: 64px;
@@ -75,11 +77,13 @@ border-radius: 10px;
 
 .hero-button:hover {
 background: #6042d8;
+transform: scale(1.07);
+box-shadow: 0 10px 28px rgba(124, 92, 255, 0.4);
 }
 
 .hero-image img {
-width: 320px;
-height: 320px;
+width: 400px;
+height: 400px;
 object-fit: cover;
 border-radius: 50%;
 }

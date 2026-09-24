@@ -2,14 +2,14 @@ import './App.css'
 import Header from "./components/Header";
 import About from "./components/About";
 import Contact from "./components/Contact";
-import Skills from "./components/Skills";
+import Projects from "./components/Projects";
 
 function App() {
     return (
         <div>
             <Header />
             <About />
-            <Skills />
+            <Projects />
             <Contact />
         </div>
     );

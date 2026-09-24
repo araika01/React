@@ -20,3 +20,33 @@
   line-height: 1.8;
   margin-bottom: 15px;
 }
+
+.about-gallery {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.about-gallery img {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 50%;          
+  border: 5px solid #fff;
+  box-shadow: 0 6px 20px rgba(124, 92, 255, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-gallery img:hover {
+  transform: scale(1.07);
+  box-shadow: 0 10px 28px rgba(124, 92, 255, 0.4);
+}
+
+@media (max-width: 600px) {
+  .about-gallery img {
+    width: 120px;
+    height: 120px;
+  }
+}

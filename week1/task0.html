@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Refresher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            color: #1a2332;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #dce3ed;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px 16px 16px;
+        }
+
+        .card h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3f5e;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .card p {
+            margin: 3px 0;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .card .label {
+            font-weight: 600;
+            color: #2d4a6f;
+        }
+
+        .card .note {
+            color: #3d5a78;
+            font-size: 13px;
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px dashed #e8edf4;
+        }
+
+        .card-full {
+            grid-column: 1 / -1;
+            border-color: #b8d2ec;
+            background: #f2f9ff;
+        }
+
+        @media (max-width: 700px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .card-full {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+        <div class = "container">
+            <h1>JavaScript Refresher</h1>
+            <div class = "grid" id="app"></div>
+        </div>
+        <script>      
+            // Task 1 - Variables & Data Types 
+                function task1() {
+                const name = "Dana", age = 20, active = true;
+                const courses = ['Math', 'English', 'History'], address = { city: 'Astana', street: 'Abay 12' };
+                const empty = null, undef = undefined;
+                const sentence = `${name} (${age}) is ${active ? 'active' : 'inactive'}, takes ${courses.join(' & ')}.`;
+
+                const types = [
+                `name: ${name} (${typeof name})`,
+                `age: ${age} (${typeof age})`,
+                `active: ${active} (${typeof active})`,
+                `courses: ${JSON.stringify(courses)} (${typeof courses})`,
+                `address: ${JSON.stringify(address)} (${typeof address})`,
+                `null: ${empty} (${typeof empty})`,
+                `undefined: ${undef} (${typeof undef})`
+                ];
+
+                return `
+                    <div class="card">
+                        <h2>1 - Variables & Data Types</h2>
+                        ${types.map(t => `<p>${t}</p>`).join('')}
+                        <p class="note"> ${sentence}</p>
+                    </div>
+                `;
+
+                // 1. let - can be changed, const - cannot be changed
+                // 2. typeof null - returns object
+                // 3. primitives: string, number, boolean,null, undefiend, symbol, bigint
+                
+            }
+
+
+
+            // Task 2 - Arrays 
+             function task2() {
+                const arr = [3, 7, 2, 10, 5];
+                const doubled = arr.map(n => n * 2);
+                const greater5 = arr.filter(n => n > 5);
+                const firstGreater5 = arr.find(n => n > 5);
+                const sum = arr.reduce((acc, n) => acc + n, 0);
+                const has10 = arr.includes(10);
+
+                return `
+                    <div class="card">
+                        <h2>2 - Arrays </h2>
+                        <p><span class="label">Original:</span> [${arr.join(', ')}]</p>
+                        <p><span class="label">Doubled:</span> [${doubled.join(', ')}]</p>
+                        <p><span class="label">Greater than 5:</span> [${greater5.join(', ')}]</p>
+                        <p><span class="label">First greater than 5:</span> ${firstGreater5}</p>
+                        <p><span class="label">Sum:</span> ${sum}</p>
+                        <p><span class="label">Has 10:</span> ${has10}</p>
+                    </div>
+                `;
+             }
+
+            // Task 3 - Arrays of Objects
+             function task3() {
+                const students = [
+                    { id: 1, name: "Anna", grade: 85},
+                    { id: 2, name: "John", grade: 62},
+                    { id: 3, name: "Sara", grade: 91},
+                    { id: 4, name: "Mike", grade: 55},
+                ];
+
+                const passed70 = students.filter(s => s.grade >=70);
+                const names = students.map(s => s.name);
+                const id3 = students.find(s => s.id ===3);
+                const top = students.reduce((a, b) => a.grade > b.grade ? a:b);
+                const avg = students.reduce((s, st) => s + st.grade, 0) / students.length;
+                const passedFlag = students.map(s => ({...s, passed: s.grade >= 60}));
+
+                return `
+                    <div class="card">
+                        <h2>3 - Arrays of Objects</h2>
+                        <p><span class="label">Students:</span> ${JSON.stringify(students)}</p>
+                        <p><span class="label">Passed (>=70):</span> ${JSON.stringify(passed70)}</p>
+                        <p><span class="label">Names:</span> [${names.join(', ')}]</p>
+                        <p><span class="label">Student with ID 3:</span> ${JSON.stringify(id3)}</p>
+                        <p><span class="label">Top Student:</span> ${JSON.stringify(top)}</p>
+                        <p><span class="label">Average Grade:</span> ${avg}</p>
+                        <p><span class="label">Passed Flag:</span> ${JSON.stringify(passedFlag.map (s => ({ name: s.name, passed: s.passed})))}</p>
+                    </div>
+                `;
+             }
+
+            // Task 4 - Objects 
+             function task4() {
+                const user = { id: 1, name: "Aizhan", age: 25, address: {city: "Almaty", street: "Tole bi"}};
+                const nameCity = `${user.name} • ${user.address.city}`;
+                user.age = 26;
+                user.email = 'aizhan@example.com';
+                delete user.address.street;
+                const { name, age } = user;
+                const { address: {city}} = user;
+                const { name: userName } = user;
+
+                return `
+                    <div class="card">
+                        <h2>4 - Objects</h2>
+                        <p><span class="label">User:</span> ${JSON.stringify(user)}</p>
+                        <p><span class="label">Name & City:</span> ${nameCity}</p>
+                        <p><span class="label">After update:</span> age=${user.age}, email=${user.email}</p>
+                        <p><span class="label">Address:</span> ${JSON.stringify(user.address)}</p>
+                        <p><span class="label">Destructuring:</span> name=${name}, age=${age}, city=${city}</p>
+                        <p><span class="label">Renamed:</span> userName=${userName}</p>
+                    </div>
+                `;
+             }
+            // Task 5 - Value and Reference 
+             function task5() {
+                const original = { name: "Alice", score: 10 };
+                const copy = original;
+                copy.score = 99;
+
+                // Original's score becomes 99
+                // Explanation: because is not a separate object, it's a reference to the same object
+                // In JavaScript, objects are passed by reference, not by value
+                // Original and copy point to the same location in memory
+
+                const spreadCopy = { ...original };
+                spreadCopy.score = 49;
+
+                // Now original = 99, spreadCopy = 49
+                // The spread operator creates a shallow copy
+
+                const userNested = { name: "Alice", address: { city: "Almaty" } };
+                const shallowCopy = { ...userNested };
+                shallowCopy.address.city = "Astana";
+                // original address becomes "Astana"
+                // Because spread only copies the top level (shallow copy), the nested address object is still shared between both objects.
+                // shallowCopy has a new address property, but it points to the same address object that user has.
+                const deepCopy = { ...userNested, address: { ...userNested.address } };
+
+                // to copy nested address correctly:
+                deepCopy.address.city = "Pavlodar";
+
+                return `
+                    <div class="card">
+                        <h2>5 - Value and Reference</h2>
+                        <p><span class="label">original after copy.score=99:</span> ${JSON.stringify(original)}</p>
+                        <p><span class="label">spread copy (score=42):</span> ${JSON.stringify(spreadCopy)}</p>
+                        <p><span class="label">original unchanged:</span> ${JSON.stringify(original)}</p>
+                        <p><span class="label">nested shallow copy city→Astana, original:</span> ${JSON.stringify(userNested.address)}</p>
+                        <p><span class="label">deep copy city→Pavlodar, original:</span> ${JSON.stringify(userNested.address)}</p>
+                    </div>
+                `;
+            }
+            // Task 6 - Functions 
+             function task6() {
+                function isEven(n) { return n%2==0; }
+                const getFullName = ( first, last ) => `${first} ${last}`;
+                function calculatePrice (price, qty ) { return price * qty; }
+                const calculateDiscount = (price, percent) => price * (1-percent / 100);
+                const getMax = (a, b) => a > b ? a : b;
+
+                return `
+                    <div class="card">
+                        <h2>6 - Functions</h2>
+                        <p><span class="label">isEven(7):</span> ${isEven(7)}</p>
+                        <p><span class="label">getFullName('A', 'B'):</span> ${getFullName('A', 'B')}</p>
+                        <p><span class="label">calculatePrice(3, 4):</span> ${calculatePrice(3, 4)}</p>
+                        <p><span class="label">calculateDiscount(100, 20):</span> ${calculateDiscount(100, 20)}</p>
+                        <p><span class="label">getMax(8, 12):</span> ${getMax(8, 12)}</p>
+                    </div>
+                `;
+             }
+            // Task 7 - Functions as Values 
+            function task7() {
+                const add = (a, b) => a+b;
+                const multiply = (a, b) => a*b;
+
+                function calculate (a, b, operation) {return operation(a, b);}
+
+                return `
+                    <div class="card">
+                        <h2>7 - Functions as Values</h2>
+                        <p><span class="label">calculate(5,3,add):</span>${calculate(5, 3, add)}</p>
+                        <p><span class='label'>calculate(5, 3, multiply):</span> ${calculate(5, 3, multiply)}</p>
+                    </div>
+                `;
+                // 1. Yes,  they can be assigned to variables just like numbers or strings, because functions are "first-class citizens".
+                // 2. Yes, functions can be passed as arguements to other functions
+                // 3. add - reference to the function(itself), add() - calls the function, executes it and returns the result
+            } 
+            // Task 8 - Scope 
+            function task8() {
+                const message = "global";
+
+                function scopeTest() {
+                    const message = "function";
+                    if(true) {
+                        const message = "block";
+                        var blockVar = "var inside block";
+                        let blockLet = "let inside block";
+                        const blockConst = "const inside block";
+                        window._blockLet = blockLet;
+                        window._blockConst = blockConst;
+                    }
+
+                    return {
+                        functionMessage: message,
+                        blockVar: blockVar,
+                        blockLet: typeof window._blockLet,
+                        blockConst: typeof window._blockConst
+                    };
+                }
+                const result = scopeTest();
+
+                return `
+                    <div class="card">
+                        <h2>8 - Scope</h2>
+                        <p><span class="label">global:</span> "${message}"</p>
+                        <p><span class="label">function scope:</span> "${result.functionMessage}"</p>
+                        <p><span class="label">block (if) message:</span> "block" (inner)</p>
+                        <p><span class="label">var outside block:</span> "${result.blockVar}"</p>
+                        <p><span class="label">let outside:</span> ${result.blockLet} · <span class="label">const outside:</span> ${result.blockConst}</p>
+                    </div>
+                `;
+
+                // 1. Global scope - The variable declared outside all functions and blocks. Accessible everywhere in the program.
+                // 2. Function scope - The variable declared inside a function (var) and it's accesible only inside that function.
+                // 3. Block scope - The variable declared inside a block (let, const) and it's accesible only inside that block.
+                // 4. var - function scope, can be redeclared and reassigned, let - block scope, can be reassigned, but cannot be redeclared, const - block scope, cannot be reassiged or redeclared.
+            }
+            // Task 9 - Closure 
+            function task9() {
+                function createCounter() {
+                    let count = 0;
+                    return function() {
+                        return ++count;
+                    };
+                }
+
+                const counter1 = createCounter();
+                const counter2 = createCounter();
+                const r1 = [counter1(), counter1(), counter1()];
+                const r2 = [counter2(), counter2()];
+
+                function createAdder(val) {
+                    return function(x) {
+                        return x + val;
+                    };
+                }
+
+                const addFive = createAdder(5);
+
+                return `
+                    <div class="card">
+                        <h2>9 - Closure</h2>
+                        <p><span class="label">counter1:</span> ${r1.join(', ')}</p>
+                        <p><span class="label">counter2:</span> ${r2.join(', ')} (own count)</p>
+                        <p><span class="label">addFive(10):</span> ${addFive(10)} · <span class="label">addFive(20):</span> ${addFive(20)}</p>
+                    </div>
+                `;
+
+                // The inner function can still access outer variables because of lexical scoping. The function remembers the environment where it was defined, and those variables stay alive inside the closure even after the outer function returns.
+
+            }
+            // Task 10 - Destructuring, Spread, and Rest 
+            function task10() {
+                const numbers = [10, 20, 30, 40];
+                const [first, second] = numbers;
+                const user = {id: 1, name: "Anna", age: 22};
+                const {name, age} = user;
+                const newNumbers = [...numbers, 50];
+                const newUser = {...user, age: 22, email: "anna@mail.com"};
+                const combined = [...numbers, ...newNumbers];
+
+                function sum(...nums) {
+                    return nums.reduce((a, b) => a+b, 0);
+                }
+
+                return `
+                    <div class="card">
+                        <h2>10 - Destructuring, Spread, and Rest </h2>
+                        <p><span class="label">first two:</span> ${first}, ${second}</p>
+                        <p><span class="label">name, age:</span> ${name}, ${age}</p>
+                        <p><span class="label">numbers + 50:</span> [${newNumbers}]</p>
+                        <p><span class="label">new user:</span> ${JSON.stringify(newUser)}</p>
+                        <p><span class="label">combined:</span> [${combined}]</p>
+                        <p><span class="label">sum(1,2):</span> ${sum(1,2)} · <span class="label">sum(1,2,3,4):</span> ${sum(1,2,3,4)}</p>
+                    </div>
+                `;
+            }
+            // Task 11 - Optional Chaining and Default Values 
+            function task11() {
+                const userWithCity = { name: "D", address: { city: "Shymkent"} };
+                const userNoCity = { name: "N"};
+                const city1 = userWithCity.address?.city ?? "City not specified";
+                const city2 = userNoCity.address?.city ?? "City not specified";
+
+                const or = [0 || 'default', '' || 'default', false || 'default', null || 'default', undefined || 'default'];
+                const nullish = [0 ?? 'default', '' ?? 'default', false ?? 'default', null ?? 'default', undefined ?? 'default'];
+
+                return `
+                    <div  class="card">
+                        <h2> 11 - Optional Chaining and Default Values</h2>
+                        <p><span class="label">with city:</span> ${city1}</p>
+                        <p><span class="label">without city:</span> ${city2}</p>
+                        <p><span class="label">|| (or):</span> [${or.join(', ')}]</p>
+                        <p><span class="label">?? (nullish):</span> [${nullish.join(', ')}]</p>
+                    </div>
+                `;
+                // spread - expands an array into individual elements, rest - collects individual elements into an array.
+            }
+                // Final Task
+
+            function taskFinal() {
+                const students = [
+                { id: 1, name: "Aigerim", age: 20, grades: [85, 90, 78] },
+                { id: 2, name: "Yerlan", age: 21, grades: [62, 70, 55] },
+                { id: 3, name: "Daniyar", age: 22, grades: [91, 88, 94] },
+                { id: 4, name: "Madina", age: 19, grades: [55, 60, 50] },
+                { id: 5, name: "Arman", age: 23, grades: [76, 82, 79] }
+                ];
+            
+
+            const getAverage = grades => grades.reduce((a, b) => a + b, 0) / grades.length;
+            const getStudentAverage = student => getAverage(student.grades);
+            const getPassedStudents = students => students.filter(s => getStudentAverage(s) >= 60);
+            const getStudentNames = student => students.map(s => s.name);
+            const findStudent = (students, id) => students.find(s => s.id === id);
+            const getTopStudent = students => students.reduce((a, b) => getStudentAverage(a) > getStudentAverage(b) ? a:b);
+
+            const result = students.map(s => {
+                const avg = getStudentAverage(s);
+                return {
+                    id: s.id,
+                    name: s.name,
+                    average: Math.round(avg * 100) / 100,
+                    passed: avg >= 60
+                };
+            });
+
+            return `
+                <div class="card card-full">
+                    <h2> Final Task</h2>
+                    <p><span class="label">averages:</span> ${students.map(s => `${s.name}: ${getStudentAverage(s).toFixed(1)}`).join(' · ')}</p>
+                    <p><span class="label">passed:</span> ${getPassedStudents(students).map(s => s.name).join(', ')}</p>
+                    <p><span class="label">names:</span> ${getStudentNames(students).join(', ')}</p>
+                    <p><span class="label">find id=3:</span> ${JSON.stringify(findStudent(students, 3))}</p>
+                    <p><span class="label">top:</span> ${getTopStudent(students).name} (${getStudentAverage(getTopStudent(students)).toFixed(1)})</p>
+                    <p><span class="label">final array:</span> ${JSON.stringify(result)}</p>
+                </div>
+                `;
+            }
+
+            document.getElementById('app').innerHTML = `
+                ${task1()}
+                ${task2()}
+                ${task3()}
+                ${task4()}
+                ${task5()}
+                ${task6()}
+                ${task7()}
+                ${task8()}
+                ${task9()}
+                ${task10()}
+                ${task11()}
+                ${taskFinal()}
+            `;
+    </script>   
+</body>
+</html>

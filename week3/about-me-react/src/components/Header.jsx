@@ -31,7 +31,7 @@ return (
 
     <div className="hero-image">
       <img
-        src="./React/5305250089603375298.jpg"
+        src={`${import.meta.env.BASE_URL}5305250089603375298.jpg`}
         alt="Profile"
       />
     </div>

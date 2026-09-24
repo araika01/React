@@ -8,11 +8,11 @@ function Contact() {
       <p>Feel free to connect with me online.</p>
 
       <div className="contact-links">
-        <a href="https://github.com/" target="_blank">
+        <a href="https://github.com/" target="_blank" rel="noreferrer">
           GitHub
         </a>
 
-        <a href="https://www.instagram.com/araizhumat_/" target="_blank">
+        <a href="https://www.instagram.com/araizhumat_/" target="_blank" rel="noreferrer">
           Instagram
         </a>
 

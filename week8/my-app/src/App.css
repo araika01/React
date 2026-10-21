@@ -1,0 +1,194 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #bfe7d2 100%);
+  color: #1d2733;
+}
+
+.app { max-width: 1200px; margin: 0 auto; padding: 16px; }
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 16px;
+}
+.app-header h1 { margin: 0; font-size: 22px; }
+
+.header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+button {
+  cursor: pointer;
+  border: 1px solid #c7d0d9;
+  background: #fff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+
+button:hover:not(:disabled) { background: #eef2f6; }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+button.primary {
+  background: #a5baa0;
+  border-color: #a5baa0;
+  color: #fff;
+}
+button.primary:hover:not(:disabled) { background: #738a6e; }
+
+button.danger { border-color: #ff9393; color: #e46a6a; }
+
+.banner {
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.banner-error { background: #fde8e8; color: #e46a6a; }
+
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 760px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  min-height: 200px;
+}
+.panel h2 { margin-top: 0; font-size: 16px; color: #55606b; }
+
+
+.state { padding: 16px; text-align: center; color: #55606b; }
+.state-error { color: #e46a6a; }
+.state-error button { margin-left: 8px; }
+.state-empty { color: #8693a0; }
+
+
+.item-list { list-style: none; margin: 0; padding: 0; }
+.item-row {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #bfcfbb;
+  cursor: pointer;
+  margin-bottom: 6px;
+  transition: background 0.15s;
+}
+.item-row:hover { background: #f4f6f8; }
+.item-row.selected { border-color: #738a6e; background: #dbe5d8; }
+
+.item-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.item-sub { font-size: 12px; color: #67727e; }
+
+
+.badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #eef2f6;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+.badge-available { background: #e6f4ea; color: #9fc089; }
+.badge-in-progress { background: #fff4e0; color: #fb7e00; }
+.badge-completed { background: #e8f0fe; color: #6db6b1; }
+
+
+.details-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.details h3 { margin: 0; }
+
+.details dl {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  row-gap: 6px;
+  margin: 12px 0 16px;
+}
+.details dt { color: #67727e; font-size: 13px; }
+.details dd { margin: 0; word-break: break-word; }
+
+.details-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 27, 35, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 10;
+}
+.modal {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.modal h3 { margin: 0 0 6px; }
+
+.modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: rgb(54, 54, 74);
+}
+.modal input,
+.modal textarea,
+.modal select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #c7d0d9;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+}
+.modal textarea { resize: vertical; min-height: 64px; }
+
+.modal .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 520px) {
+  .modal .row { grid-template-columns: 1fr; }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}

@@ -6,7 +6,7 @@ import RecipesPage from "./pages/RecipesPage";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/React">
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<RecipesPage />} />

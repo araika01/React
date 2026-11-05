@@ -1,0 +1,1 @@
+import{t as e}from"./index-H1iTImCN.js";var t=e();function n({title:e,message:n,actionLabel:r,onAction:i}){return(0,t.jsxs)(`div`,{className:`state-message`,children:[(0,t.jsx)(`h3`,{children:e}),n&&(0,t.jsx)(`p`,{children:n}),i&&(0,t.jsx)(`button`,{className:`btn`,onClick:i,children:r})]})}export{n as t};

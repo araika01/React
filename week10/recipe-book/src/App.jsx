@@ -1,18 +1,29 @@
+import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Layout from "./components/Layout";
-import AddRecipePage from "./pages/AddRecipePage";
-import RecipeDetailsPage from "./pages/RecipeDetailsPage";
-import RecipesPage from "./pages/RecipesPage";
+import RootLayout from "./components/RootLayout";
+import HomePage from "./pages/HomePage";
+
+const AboutPage         = lazy(() => import("./pages/AboutPage"));
+const LoginPage         = lazy(() => import("./pages/LoginPage"));
+const RecipesPage       = lazy(() => import("./pages/RecipesPage"));
+const RecipeDetailsPage = lazy(() => import("./pages/RecipeDetailsPage"));
+const DashboardPage     = lazy(() => import("./pages/DashboardPage"));
+const AddRecipePage     = lazy(() => import("./pages/AddRecipePage"));
+const NotFoundPage      = lazy(() => import("./pages/NotFoundPage"));
 
 export default function App() {
   return (
     <BrowserRouter basename="/React">
       <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<RecipesPage />} />
-          <Route path="/recipes/:id" element={<RecipeDetailsPage />} />
-          <Route path="/add" element={<AddRecipePage />} />
-          <Route path="*" element={<div className="page">Page not found</div>} />
+        <Route element={<RootLayout />}>
+          <Route path="/"               element={<HomePage />} />
+          <Route path="/about"          element={<AboutPage />} />
+          <Route path="/login"          element={<LoginPage />} />
+          <Route path="/recipes"        element={<RecipesPage />} />
+          <Route path="/recipes/:id"    element={<RecipeDetailsPage />} />
+          <Route path="/dashboard"      element={<DashboardPage />} />
+          <Route path="/add"            element={<AddRecipePage />} />
+          <Route path="*"               element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

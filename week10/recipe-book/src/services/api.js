@@ -98,3 +98,7 @@ export async function addRecipe(data) {
     return recipe;
   }, 0.05);
 }
+
+export async function fetchAllRecipes() {
+  return fakeFetch(async () => readDb(), 0.03);
+}

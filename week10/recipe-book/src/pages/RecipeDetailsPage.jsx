@@ -1,84 +1,106 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { fetchRecipeById } from "../api/recipesApi";
-import FavoriteButton from "../components/FavoriteButton";
 import StateMessage from "../components/StateMessage";
-import { useFavorites } from "../hooks/useFavorites";
+import { fetchRecipeById } from "../services/api";
 
 export default function RecipeDetailsPage() {
   const { id } = useParams();
+
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [reloadKey, setReloadKey] = useState(0);
-
-  const { favorites, toggleFavorite } = useFavorites();
 
   useEffect(() => {
-    let cancelled = false;
+    let ignore = false; 
     setLoading(true);
     setError(null);
     setRecipe(null);
 
     fetchRecipeById(id)
-      .then((r) => { if (!cancelled) setRecipe(r); })
-      .catch((e) => { if (!cancelled) setError(e.message); })
-      .finally(() => { if (!cancelled) setLoading(false); });
+      .then((r) => { if (!ignore) setRecipe(r); })
+      .catch((err) => { if (!ignore) setError(err.message); })
+      .finally(() => { if (!ignore) setLoading(false); });
 
-    return () => { cancelled = true; };
-  }, [id, reloadKey]);
+    return () => { ignore = true; };
+  }, [id]);
 
-  if (loading) return <StateMessage title="Loading recipe..." />;
-  if (error) return (
-    <StateMessage
-      title="Failed to load"
-      message={error}
-      actionLabel="Retry"
-      onAction={() => setReloadKey((k) => k + 1)}
-    />
-  );
+  if (loading) {
+    return (
+      <div className="page details">
+        <div className="details-actions">
+          <Link className="btn btn-ghost" to="/recipes">← All recipes</Link>
+        </div>
+        <p className="muted">Loading recipe…</p>
+      </div>
+    );
+  }
+
+
+  const isMissing = error === "Recipe not found";
+
+  if (error) {
+    return (
+      <div className="page details">
+        <div className="details-actions">
+          <Link className="btn btn-ghost" to="/recipes">← All recipes</Link>
+        </div>
+        <StateMessage
+          title={isMissing ? "Recipe not found" : "Something went wrong"}
+          message={
+            isMissing
+              ? `We couldn't find a recipe with id "${id}".`
+              : error
+          }
+        />
+      </div>
+    );
+  }
+
+  if (!recipe) return null;
 
   return (
-    <article className="details">
-      <Link to="/" className="back">← Back to list</Link>
-
-      <div className="details-head">
-        <img className="details-img" src={recipe.imageUrl} alt={recipe.title} />
-        <div>
-          <div className="details-title-row">
-            <h1>{recipe.title}</h1>
-            <FavoriteButton
-              isActive={favorites.has(recipe.id)}
-              onToggle={() => toggleFavorite(recipe.id)}
-            />
-          </div>
-          <p className="muted">
-            {recipe.cuisine} · {recipe.difficulty} · {recipe.cookTime} min · ★ {recipe.rating}
-          </p>
-          <p className="muted">Servings: {recipe.servings}</p>
-        </div>
+    <div className="page details">
+      <div className="details-actions">
+        <Link className="btn btn-ghost" to="/recipes">← All recipes</Link>
       </div>
 
-      <section className="details-section">
-        <h2>Ingredients</h2>
-        <ul className="ingredients">
-          {recipe.ingredients.map((ing, i) => (
-            <li key={`${ing.name}-${i}`}>
-              <span>{ing.name}</span>
-              <strong>{ing.amount}</strong>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <div className="details-grid">
+        <img
+          className="details-img"
+          src={recipe.imageUrl}
+          alt={recipe.title}
+        />
 
-      <section className="details-section">
-        <h2>Instructions</h2>
-        <ol className="steps">
-          {recipe.steps.map((step, i) => (
-            <li key={i}>{step}</li>
-          ))}
-        </ol>
-      </section>
-    </article>
+        <div>
+          <h1>{recipe.title}</h1>
+
+          <ul className="details-meta">
+            <li><span>Cuisine: </span><strong>{recipe.cuisine}</strong></li>
+            <li><span>Difficulty: </span><strong>{recipe.difficulty}</strong></li>
+            <li><span>Cook time: </span><strong>{recipe.cookTime} min</strong></li>
+            <li><span>Servings: </span><strong>{recipe.servings}</strong></li>
+            <li><span>Rating: </span><strong>★ {recipe.rating}</strong></li>
+            <li><span>Ingredients: </span><strong>{recipe.ingredients.length}</strong></li>
+            <li><span>Steps: </span><strong>{recipe.steps.length}</strong></li>
+            <li><span>Source</span><strong>{recipe.isUserAdded ? "User" : "Seed"}</strong></li>
+          </ul>
+
+          <h2>Ingredients</h2>
+          <ul className="ingredients">
+            {recipe.ingredients.map((ing, i) => (
+              <li key={i}>
+                {ing.name}
+                {ing.amount ? ` — ${ing.amount}` : ""}
+              </li>
+            ))}
+          </ul>
+
+          <h2>Steps</h2>
+          <ol className="steps">
+            {recipe.steps.map((s, i) => <li key={i}>{s}</li>)}
+          </ol>
+        </div>
+      </div>
+    </div>
   );
 }

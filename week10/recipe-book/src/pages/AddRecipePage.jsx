@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addRecipe } from "../api/recipesApi";
+import { addRecipe } from "../services/api";
 import RecipeForm from "../components/RecipeForm";
 
 export default function AddRecipePage() {

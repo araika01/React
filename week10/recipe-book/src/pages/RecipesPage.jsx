@@ -1,81 +1,108 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { fetchRecipes } from "../api/recipesApi";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import FilterBar from "../components/FilterBar";
 import Pagination from "../components/Pagination";
 import RecipeList from "../components/RecipeList";
+import { fetchRecipes } from "../services/api";
 import { useFavorites } from "../hooks/useFavorites";
 
+const CUISINES = [
+  "italian", "asian", "mexican", "french",
+  "indian", "american", "mediterranean", "thai",
+];
 const PAGE_SIZE = 9;
 
-const DEFAULT_FILTERS = {
-  search: "",
-  cuisine: "all",
-  difficulty: "all",
-  maxTime: 0,
-  sort: "title-asc",
-};
-
-const CUISINES = ["italian", "asian", "mexican", "french", "indian", "american", "mediterranean", "thai"];
-
 export default function RecipesPage() {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const [page, setPage] = useState(1);
-  const [data, setData] = useState({ items: [], total: 0, totalPages: 1 });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { favorites, toggleFavorite } = useFavorites();
+
+  const search     = searchParams.get("search") ?? "";
+  const cuisine    = searchParams.get("cuisine") ?? "all";
+  const difficulty = searchParams.get("difficulty") ?? "all";
+  const maxTime    = Number(searchParams.get("maxTime") ?? 0);
+  const sort       = searchParams.get("sort") ?? "title-asc";
+  const page       = Number(searchParams.get("page") ?? 1);
+
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  const [data, setData] = useState({
+    items: [], total: 0, totalPages: 1, page: 1, pageSize: PAGE_SIZE,
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
 
-  const { favorites, toggleFavorite } = useFavorites();
-
   useEffect(() => {
-    let cancelled = false;
+    let ignore = false; 
     setLoading(true);
     setError(null);
 
-    fetchRecipes({ page, pageSize: PAGE_SIZE, ...filters })
-      .then((res) => {
-        if (cancelled) return;
-        setData(res);
-        if (res.page !== page) setPage(res.page);
-      })
-      .catch((e) => {
-        if (cancelled) return;
-        setError(e.message);
-      })
-      .finally(() => {
-        if (cancelled) return;
-        setLoading(false);
+    fetchRecipes({
+      page,
+      pageSize: PAGE_SIZE,
+      search: debouncedSearch,
+      cuisine,
+      difficulty,
+      maxTime,
+      sort,
+    })
+      .then((res) => { if (!ignore) setData(res); })
+      .catch((err) => { if (!ignore) setError(err.message); })
+      .finally(() => { if (!ignore) setLoading(false); });
+
+    return () => { ignore = true; };
+  }, [debouncedSearch, cuisine, difficulty, maxTime, sort, page, reloadKey]);
+
+  function updateFilters(patch) {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+
+      Object.entries(patch).forEach(([k, v]) => {
+        const isEmpty =
+          v === undefined ||
+          v === null ||
+          v === "" ||
+          v === "all" ||
+          (k === "maxTime" && Number(v) === 0) ||
+          (k === "page" && Number(v) === 1); 
+
+        if (isEmpty) next.delete(k);
+        else next.set(k, String(v));
       });
 
-    return () => { cancelled = true; };
-  }, [page, filters.search, filters.cuisine, filters.difficulty, filters.maxTime, filters.sort, reloadKey]);
+      
+      if (!("page" in patch)) next.delete("page");
 
-  useEffect(() => {
-    setPage(1);
-  }, [filters.search, filters.cuisine, filters.difficulty, filters.maxTime, filters.sort]);
+      return next;
+    });
+  }
 
-  const handleFiltersChange = useCallback((patch) => {
-    setFilters((prev) => ({ ...prev, ...patch }));
-  }, []);
+  function resetFilters() {
+    setSearchParams({});
+  }
 
-  const handleReset = useCallback(() => {
-    setFilters(DEFAULT_FILTERS);
-    setPage(1);
-  }, []);
-
-  const pageSizeForSkeleton = useMemo(() => PAGE_SIZE, []);
+  function goToPage(p) {
+    updateFilters({ page: p });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   return (
-    <section className="page">
+    <div className="page">
       <div className="page-head">
         <h1>Recipes</h1>
-        <p className="muted">Found: {data.total}</p>
+        <p className="muted">
+          {loading ? "Loading…" : `${data.total} recipes found`}
+        </p>
       </div>
 
       <FilterBar
-        filters={filters}
-        onChange={handleFiltersChange}
-        onReset={handleReset}
+        filters={{ search, cuisine, difficulty, maxTime, sort }}
+        onChange={updateFilters}
+        onReset={resetFilters}
         cuisines={CUISINES}
       />
 
@@ -83,16 +110,18 @@ export default function RecipesPage() {
         items={data.items}
         loading={loading}
         error={error}
-        pageSize={pageSizeForSkeleton}
+        pageSize={PAGE_SIZE}
         favorites={favorites}
         onToggleFavorite={toggleFavorite}
         onRetry={() => setReloadKey((k) => k + 1)}
-        onReset={handleReset}
+        onReset={resetFilters}
       />
 
-      {!loading && !error && (
-        <Pagination page={page} totalPages={data.totalPages} onChange={setPage} />
-      )}
-    </section>
+      <Pagination
+        page={data.page}
+        totalPages={data.totalPages}
+        onChange={goToPage}
+      />
+    </div>
   );
 }

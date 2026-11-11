@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import RootLayout from "./components/RootLayout";
 import HomePage from "./pages/HomePage";
 
@@ -13,7 +13,7 @@ const NotFoundPage      = lazy(() => import("./pages/NotFoundPage"));
 
 export default function App() {
   return (
-    <BrowserRouter basename="/React">
+    <HashRouter>
       <Routes>
         <Route element={<RootLayout />}>
           <Route path="/"               element={<HomePage />} />
@@ -26,6 +26,6 @@ export default function App() {
           <Route path="*"               element={<NotFoundPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

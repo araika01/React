@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
@@ -18,12 +17,10 @@ import {
 
 export default function RecipeDetailsPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const [editing, setEditing] = useState(false);
 
-  // GET: Load recipe details
   const {
     data: recipe,
     isPending,
@@ -35,18 +32,15 @@ export default function RecipeDetailsPage() {
     retry: false,
   });
 
-  // UPDATE: Edit recipe
   const updateMutation = useMutation({
     mutationFn: (updates) => updateRecipe(id, updates),
 
     onSuccess: async (updatedRecipe) => {
-      // Update the current recipe cache
       queryClient.setQueryData(
         ["recipe", id],
         updatedRecipe
       );
 
-      // Invalidate cached recipe lists
       await queryClient.invalidateQueries({
         queryKey: ["recipes"],
       });
@@ -55,22 +49,18 @@ export default function RecipeDetailsPage() {
     },
   });
 
-  // DELETE: Remove recipe
   const deleteMutation = useMutation({
     mutationFn: () => deleteRecipe(id),
 
     onSuccess: async () => {
-      // Cancel any ongoing details request
       await queryClient.cancelQueries({
         queryKey: ["recipe", id],
       });
 
-      // Remove deleted recipe from cache
       queryClient.removeQueries({
         queryKey: ["recipe", id],
       });
 
-      // Invalidate cached recipe lists
       await queryClient.invalidateQueries({
         queryKey: ["recipes"],
       });
@@ -79,13 +69,11 @@ export default function RecipeDetailsPage() {
     },
   });
 
-  // Open edit form
   function startEditing() {
     updateMutation.reset();
     setEditing(true);
   }
 
-  // Save all edited fields
   async function handleUpdate(payload) {
     try {
       await updateMutation.mutateAsync(payload);
@@ -94,7 +82,6 @@ export default function RecipeDetailsPage() {
     }
   }
 
-  // Delete with confirmation
   async function handleDelete() {
     const confirmed = window.confirm(
       "Are you sure you want to delete this recipe?"
@@ -109,7 +96,6 @@ export default function RecipeDetailsPage() {
     }
   }
 
-  // Loading state
   if (isPending) {
     return (
       <div className="page details">
@@ -123,7 +109,7 @@ export default function RecipeDetailsPage() {
     );
   }
 
-  // Error state
+
   if (isError) {
     const isMissing = error?.message === "Recipe not found";
 
@@ -152,7 +138,6 @@ export default function RecipeDetailsPage() {
   return (
     <div className="page details">
 
-      {/* Navigation and actions */}
       <div className="details-actions">
         <Link className="btn btn-ghost" to="/recipes">
           ← All recipes

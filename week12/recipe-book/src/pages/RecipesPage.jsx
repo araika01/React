@@ -1,8 +1,7 @@
-
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { useNetworkStatus } from "../context/NetworkStatusContext";
 import FilterBar from "../components/FilterBar";
 import Pagination from "../components/Pagination";
 import RecipeList from "../components/RecipeList";
@@ -20,6 +19,7 @@ export default function RecipesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { favorites, toggleFavorite } = useFavorites();
   const queryClient = useQueryClient();
+  const isOnline = useNetworkStatus();
 
   const search = searchParams.get("search") ?? "";
   const cuisine = searchParams.get("cuisine") ?? "all";
@@ -125,6 +125,11 @@ export default function RecipesPage() {
 
   return (
     <div className="page">
+      {!isOnline && (
+        <div className="cached-data-notice">
+          📦 Offline mode — showing locally saved recipes
+        </div>
+      )} 
       <div className="page-head">
         <h1>Recipes</h1>
 

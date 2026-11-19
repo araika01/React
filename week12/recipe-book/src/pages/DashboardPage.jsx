@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import StateMessage from "../components/StateMessage";
 import { fetchAllRecipes } from "../services/api";
@@ -16,23 +17,18 @@ function groupBy(items, fn) {
 }
 
 export default function DashboardPage() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [cuisine, setCuisine] = useState("all");
 
-
-  useEffect(() => {
-    let ignore = false;
-    setLoading(true);
-    setError(null);
-    fetchAllRecipes()
-      .then((data) => { if (!ignore) setItems(data); })
-      .catch((err) => { if (!ignore) setError(err.message); })
-      .finally(() => { if (!ignore) setLoading(false); });
-    return () => { ignore = true; };
-  }, []);
-
+  const {
+    data: items = [],
+    isPending: loading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["recipes", "all"],
+    queryFn: fetchAllRecipes,
+    staleTime: 1000 * 60 * 5,
+  });
  
   const filtered = useMemo(
     () => (cuisine === "all" ? items : items.filter((r) => r.cuisine === cuisine)),
@@ -53,11 +49,11 @@ export default function DashboardPage() {
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <div className="page">
         <h1>Dashboard</h1>
-        <StateMessage title="Failed to load dashboard" message={error} />
+        <StateMessage title="Failed to load dashboard" message={error?.message} />
       </div>
     );
   }

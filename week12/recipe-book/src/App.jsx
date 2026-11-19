@@ -1,8 +1,11 @@
 import { lazy } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
+import OfflinePage from "./pages/OfflinePage";
 import RootLayout from "./components/RootLayout";
 import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRecipesPage from "./pages/PublicRecipesPage";
+import PublicRecipeDetailsPage from "./pages/PublicRecipeDetailsPage";
 
 const AboutPage         = lazy(() => import("./pages/AboutPage"));
 const SignupPage        = lazy(() => import("./pages/SignupPage"));
@@ -21,6 +24,8 @@ export default function App() {
       <Routes>
         <Route element={<RootLayout />}>
           <Route path="/"               element={<HomePage />} />
+          <Route path="public-recipes"  element={<PublicRecipesPage />} />
+          <Route path="public-recipes/:id" element={<PublicRecipeDetailsPage />} />
           <Route path="/about"          element={<AboutPage />} />
           <Route path="/login"          element={<LoginPage />} />
           <Route path="/signup"         element={<SignupPage />} />
@@ -31,6 +36,7 @@ export default function App() {
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
           <Route path="/add"            element={<AddRecipePage />} />
+          <Route path="/offline"        element={<OfflinePage />} />
           <Route path="*"               element={<NotFoundPage />} />
         </Route>
       </Routes>
